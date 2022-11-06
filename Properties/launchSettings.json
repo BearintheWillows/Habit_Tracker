@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Habit_Tracker": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\Users\\SJWil\\source\\repos\\BearintheWillows\\Habit_Tracker\\Habit_Tracker\\Habit_Tracker.csproj"
+    }
+  }
+}
