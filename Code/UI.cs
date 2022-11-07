@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Habit_Tracker.Data;
 
 namespace Habit_Tracker.Code
 {
@@ -11,11 +12,10 @@ namespace Habit_Tracker.Code
     {
         public void MenuChoices(int choice)
         {
-            
                 switch (choice)
             {
                 case 1:
-                DateCheck();
+                AddHabit();
                 break;
 
                 default:
@@ -65,13 +65,35 @@ namespace Habit_Tracker.Code
                     while (!DateTime.TryParse(Console.ReadLine(), out date))
                     {
                         Console.WriteLine("Incorrect Date. Try again.");
-                        Console.WriteLine("Valid Date Format - YYYY/MM/DD");
+                        Console.WriteLine("Valid Date Format - DD/MM/YYYY");
                     }
                     Console.WriteLine(date);
                     return date;
                 default:
                     return DateTime.Now;
             }
+        }
+
+        public void AddHabit()
+        {
+            var date = DateCheck();
+            var quanitity = QuantityCheck();
+            AppDb.InsertHabit(date, quanitity);
+        }
+
+        private static int QuantityCheck()
+        {
+
+            int input;
+            Console.WriteLine("Please enter a Quantity: ");
+
+            while (!int.TryParse(Console.ReadLine(), out input))
+            {
+                Console.WriteLine("Incorrect Value.");
+                Console.WriteLine("Please enter a Number: ");
+            }
+
+            return input;
         }
     }
 }

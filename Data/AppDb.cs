@@ -37,4 +37,31 @@ public static class AppDb
         }
         //Connection closes automatically by using the 'using' statement
     }
+
+        public static void InsertHabit(DateTime date, int quantity)
+        {
+            using (var connection = new SQLiteConnection(connectionString))
+            {
+                using (var command = connection.CreateCommand())
+                {
+                    // Open Connection
+                    connection.Open();
+                    // insert into habits (date, quantity) values ('2021-01-01', 1)
+                    command.CommandText = @"INSERT INTO habits (date, quantity) VALUES (@date, @quantity)";
+                    command.Parameters.AddWithValue("@date", date);
+                    command.Parameters.AddWithValue("@quantity", quantity);
+                    // Execute non-query command. No Data Returned
+                    try
+                    {
+                        command.ExecuteNonQuery();
+                        Console.WriteLine("Data Inserted successfully");
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Data not Inserted");
+                        Console.WriteLine(e);
+                    }
+                }
+            }
+        }
     }
