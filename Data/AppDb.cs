@@ -133,9 +133,77 @@ public static class AppDb
             }
         }
 
-    internal static object GetById(int value)
-    {
-        throw new NotImplementedException();
+        public static bool UpdateHabit(Habit habit)
+        {
+            using (var connection = new SQLiteConnection(connectionString))
+            {
+                using (var command = connection.CreateCommand())
+                {
+                    // Open Connection
+                    connection.Open();
+                    // Select row from Habits where Id = id
+                    command.CommandText = $"SELECT * FROM habits WHERE Id = {habit.Id}";
+                    command.Parameters.AddWithValue("@id", habit.Id);
+
+                    // Create SQLiteDataReader to read the data
+                    SQLiteDataReader reader = command.ExecuteReader();
+                    Console.WriteLine($"Id: {habit.Id}, Date: {habit.Date}, Quantity: {habit.Quantity}");
+                    Console.WriteLine("Executing reader...");
+                    // Check if the reader has any rows
+                    if (reader.HasRows)
+                    {
+                        reader.Close();
+                        // Update row from habits where Id = id
+                        Console.WriteLine("Updating Habit...");
+                        command.CommandText = $"UPDATE habits SET Date = @date, Quantity = @quantity WHERE Id = {habit.Id}";
+                        command.Parameters.AddWithValue("@date", habit.Date);
+                        command.Parameters.AddWithValue("@quantity", habit.Quantity);
+                        command.ExecuteNonQuery();
+                        Console.WriteLine($"Habit {habit.Id} updated successfully");
+                        return true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("No Habit with that ID");
+                        Console.WriteLine("Try again: ");
+                        return false;
+                    }
+                }
+            }
+        }
+
+        public static Habit GetById(int id)
+        {
+        using var connection = new SQLiteConnection(connectionString);
+        using var command = connection.CreateCommand();
+        // Open Connection
+        connection.Open();
+        // Select row from Habits where Id = id
+        command.CommandText = $"SELECT * FROM habits WHERE Id = {id}";
+        command.Parameters.AddWithValue("@id", id);
+
+        // Create SQLiteDataReader to read the data
+        using var reader = command.ExecuteReader();
+
+        // Check if the reader has any rows
+        if (reader.HasRows)
+        {
+            reader.Read();
+            Habit habit = new Habit();
+            habit.Id = reader.GetInt32(0);
+            habit.Date = reader.GetDateTime(1);
+            habit.Quantity = reader.GetInt32(2);
+           
+            return habit;
+        }
+        else
+        {
+            Console.WriteLine("No Habit with that ID");
+            Console.WriteLine("Try again: ");
+            return null;
+        }
+
     }
+
 }
 

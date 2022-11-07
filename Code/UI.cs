@@ -16,6 +16,9 @@ namespace Habit_Tracker.Code
                     case 2:
                         GetHabits();
                         break;
+                    case 3:
+                        UpdateHabit();
+                        break;
                     case 4:
                         DeleteHabit();
                         break;
@@ -127,6 +130,28 @@ namespace Habit_Tracker.Code
             return input;
         }
 
+private static void UpdateHabit()
+        {
+            Console.WriteLine("Enter the ID of the Habit you want to update: ");
+            var id = Console.ReadLine();
+            if (int.TryParse(id, out int value))
+            {
+                var habit = AppDb.GetById(value);
+                if (habit != null)
+                {
+                    habit.Quantity = QuantityCheck();
+                    AppDb.UpdateHabit(habit);
+                }
+                else
+                {
+                    Console.WriteLine("Habit not found");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Please enter an ID");
+            }
+        }
         
     }
 }
