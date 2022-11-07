@@ -1,4 +1,5 @@
 using System.Data.SQLite;
+using Habit_Tracker.Models;
 
 namespace Habit_Tracker.Data;
 
@@ -6,7 +7,7 @@ public static class AppDb
     {
     private const string connectionString = "Data Source=habit-tracker.db";
 
-    public static void CreateDB()
+        public static void CreateDB()
     {
         // Creates a new Database if one does not exist
         using var connection = new SQLiteConnection(connectionString);
@@ -65,7 +66,8 @@ public static class AppDb
             }
         }
 
-        public static bool DeleteById(int id){
+        public static bool DeleteById(int id)
+        {
             using (var connection = new SQLiteConnection(connectionString) )
             {
                 using (var command = connection.CreateCommand())
@@ -98,4 +100,42 @@ public static class AppDb
                 }
             }
         }
+    
+        public static List<Habit> GetHabits()
+        {
+            using (var connection = new SQLiteConnection(connectionString))
+            {
+                using (var command = connection.CreateCommand())
+                {
+                    // Open Connection
+                    connection.Open();
+                    // Select all rows from habits
+                    command.CommandText = "SELECT * FROM habits";
+                    // Create SQLiteDataReader to read the data
+                    SQLiteDataReader reader = command.ExecuteReader();
+                    // Create a list to store the habits
+                    List<Habit> habits = new();
+                    // Loop through the reader
+                    while (reader.Read())
+                    {
+                        // Create a habit object
+                        Habit habit = new Habit();
+                        // Set the habit properties
+                        habit.Id = reader.GetInt32(0);
+                        habit.Date = reader.GetDateTime(1);
+                        habit.Quantity = reader.GetInt32(2);
+                        // Add the habit to the list
+                        habits.Add(habit);
+                    }
+                    // Return the list of habits
+                    return habits;
+                }
+            }
+        }
+
+    internal static object GetById(int value)
+    {
+        throw new NotImplementedException();
     }
+}
+

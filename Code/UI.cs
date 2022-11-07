@@ -1,9 +1,3 @@
-using System.Runtime.CompilerServices;
-using System.ComponentModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Habit_Tracker.Data;
 
 namespace Habit_Tracker.Code
@@ -12,22 +6,30 @@ namespace Habit_Tracker.Code
     {
         public void MenuChoices(int choice)
         {
-                switch (choice)
+            while (choice != 5)
             {
-                case 1:
-                AddHabit();
-                break;
-
-                case 4:
-                DeleteHabit();
-                    break;
-                default:
-                Console.WriteLine("Incorrect Option");
-                Console.WriteLine("Try again: ");
+                switch (choice)
+                {
+                    case 1:
+                        AddHabit();
+                        break;
+                    case 2:
+                        GetHabits();
+                        break;
+                    case 4:
+                        DeleteHabit();
+                        break;
+                    default:
+                        Console.WriteLine("Incorrect Option");
+                        Console.WriteLine("Try again: ");
+                        GetMenuInput();
+                        break;
+                }
+                Console.WriteLine("Press any key to continue");
+                Console.ReadLine();
                 GetMenuInput();
-                    break;
             }
-    
+            Console.WriteLine("Goodbye");
         }
 
         private void DeleteHabit()
@@ -47,7 +49,9 @@ namespace Habit_Tracker.Code
             }
         }
 
-        public void GetMenuInput(){
+        public void GetMenuInput()
+        {
+            Display.Menu();
             string choiceInput = Console.ReadLine();
 
             if (!int.TryParse(choiceInput, out int choice))
@@ -61,7 +65,7 @@ namespace Habit_Tracker.Code
             }
         }
 
-        public DateTime DateCheck()
+        private static DateTime DateCheck()
         {
             Console.WriteLine("Have you performed the Habit now? Y/N");
             var input = Console.ReadLine().ToLower();
@@ -89,16 +93,28 @@ namespace Habit_Tracker.Code
             }
         }
 
-        public void AddHabit()
+        private void AddHabit()
         {
             var date = DateCheck();
             var quanitity = QuantityCheck();
             AppDb.InsertHabit(date, quanitity);
         }
 
+        private void GetHabits()
+        {
+            var habits = AppDb.GetHabits();
+            int count = 1;
+            foreach (var habit in habits)
+            {
+                Console.WriteLine(
+                    $"{count} - ID: {habit.Id} Date: {habit.Date} Quantity: {habit.Quantity}"
+                );
+                count++;
+            }
+        }
+
         private static int QuantityCheck()
         {
-
             int input;
             Console.WriteLine("Please enter a Quantity: ");
 
@@ -110,5 +126,7 @@ namespace Habit_Tracker.Code
 
             return input;
         }
+
+        
     }
 }
