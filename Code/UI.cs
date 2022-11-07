@@ -18,6 +18,9 @@ namespace Habit_Tracker.Code
                 AddHabit();
                 break;
 
+                case 4:
+                DeleteHabit();
+                    break;
                 default:
                 Console.WriteLine("Incorrect Option");
                 Console.WriteLine("Try again: ");
@@ -25,6 +28,23 @@ namespace Habit_Tracker.Code
                     break;
             }
     
+        }
+
+        private void DeleteHabit()
+        {
+            Console.WriteLine("Enter the ID of the Habit you want to delete: ");
+            var id = Console.ReadLine();
+            if (int.TryParse(id, out int value))
+            {
+                if (AppDb.DeleteById(value))
+                {
+                    Console.WriteLine("Habit Deleted");
+                }
+                else
+                {
+                    DeleteHabit();
+                }
+            }
         }
 
         public void GetMenuInput(){
@@ -39,11 +59,6 @@ namespace Habit_Tracker.Code
             {
                 MenuChoices(choice);
             }
-        }
-
-        public void AddHabitInput()
-        {
-
         }
 
         public DateTime DateCheck()

@@ -64,4 +64,38 @@ public static class AppDb
                 }
             }
         }
+
+        public static bool DeleteById(int id){
+            using (var connection = new SQLiteConnection(connectionString) )
+            {
+                using (var command = connection.CreateCommand())
+                {
+                    // Open Connection
+                    connection.Open();
+                    // Select row from Habits where Id = id
+                    command.CommandText = $"SELECT * FROM habits WHERE Id = {id}";
+                    command.Parameters.AddWithValue("@id", id);
+
+                    // Create SQLiteDataReader to read the data
+                    SQLiteDataReader reader = command.ExecuteReader();
+
+                    // Check if the reader has any rows
+                    if (reader.HasRows)
+                    {
+                        reader.Close();
+                        // Delete row from habits where Id = id
+                        command.CommandText = $"DELETE FROM habits WHERE Id = {id}";
+                        command.Parameters.AddWithValue("@id", id);
+                        command.ExecuteNonQuery();
+                        return true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("No Habit with that ID");
+                        Console.WriteLine("Try again: ");
+                        return false;
+                    }
+                }
+            }
+        }
     }
