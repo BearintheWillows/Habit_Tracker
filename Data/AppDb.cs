@@ -1,5 +1,7 @@
+using System.ComponentModel.DataAnnotations;
 using System.Data.SQLite;
 using Habit_Tracker.Models;
+using Habit_Tracker.Code;
 
 namespace Habit_Tracker.Data;
 
@@ -12,29 +14,27 @@ public static class AppDb
         // Creates a new Database if one does not exist
         using var connection = new SQLiteConnection(connectionString);
         // Declaring command sent to Db
-        using (var command = connection.CreateCommand())
-        {
-            connection.Open();
+        using var command = connection.CreateCommand();
+        connection.Open();
 
-            // Declaring Command in SQL
-            command.CommandText =
-                @"CREATE TABLE IF NOT EXISTS habits (
+        // Declaring Command in SQL
+        command.CommandText =
+            @"CREATE TABLE IF NOT EXISTS habits (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
                         Date TEXT,
                         Quantity INTEGER
                         )";
 
-            // Execute non-query command. No Data Returned
-            try
-            {
-                command.ExecuteNonQuery();
-                Console.WriteLine("Db Created Successfully");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Db not Created");
-                Console.WriteLine(e);
-            }
+        // Execute non-query command. No Data Returned
+        try
+        {
+            command.ExecuteNonQuery();
+            Console.WriteLine("Db Created Successfully");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Db not Created");
+            Console.WriteLine(e);
         }
         //Connection closes automatically by using the 'using' statement
     }
@@ -93,8 +93,7 @@ public static class AppDb
                     }
                     else
                     {
-                        Console.WriteLine("No Habit with that ID");
-                        Console.WriteLine("Try again: ");
+                        Display.IdNotFoundError();
                         return false;
                     }
                 }
@@ -147,8 +146,6 @@ public static class AppDb
 
                     // Create SQLiteDataReader to read the data
                     SQLiteDataReader reader = command.ExecuteReader();
-                    Console.WriteLine($"Id: {habit.Id}, Date: {habit.Date}, Quantity: {habit.Quantity}");
-                    Console.WriteLine("Executing reader...");
                     // Check if the reader has any rows
                     if (reader.HasRows)
                     {
@@ -164,8 +161,7 @@ public static class AppDb
                     }
                     else
                     {
-                        Console.WriteLine("No Habit with that ID");
-                        Console.WriteLine("Try again: ");
+                        Display.IdNotFoundError();
                         return false;
                     }
                 }
@@ -198,8 +194,7 @@ public static class AppDb
         }
         else
         {
-            Console.WriteLine("No Habit with that ID");
-            Console.WriteLine("Try again: ");
+            Display.IdNotFoundError();
             return null;
         }
 

@@ -4,8 +4,9 @@ namespace Habit_Tracker.Code
 {
     public class UI
     {
-        public void MenuChoices(int choice)
+        public void MenuChoices(int choiceInput)
         {
+            int choice = choiceInput;
             while (choice != 5)
             {
                 switch (choice)
@@ -22,16 +23,20 @@ namespace Habit_Tracker.Code
                     case 4:
                         DeleteHabit();
                         break;
+                    case 5:
+                        break;
                     default:
                         Console.WriteLine("Incorrect Option");
                         Console.WriteLine("Try again: ");
-                        GetMenuInput();
                         break;
                 }
                 Console.WriteLine("Press any key to continue");
                 Console.ReadLine();
+                Console.Clear();
                 GetMenuInput();
+                choice = 5;
             }
+            Console.Clear();
             Console.WriteLine("Goodbye");
         }
 
@@ -55,6 +60,7 @@ namespace Habit_Tracker.Code
         public void GetMenuInput()
         {
             Display.Menu();
+            Console.WriteLine("Choose an option: ");
             string choiceInput = Console.ReadLine();
 
             if (!int.TryParse(choiceInput, out int choice))
@@ -62,7 +68,9 @@ namespace Habit_Tracker.Code
                 Display.NotANumberError();
                 GetMenuInput();
             }
-            else
+            else if (choice == 5)
+            {
+            } else
             {
                 MenuChoices(choice);
             }
@@ -123,8 +131,7 @@ namespace Habit_Tracker.Code
 
             while (!int.TryParse(Console.ReadLine(), out input))
             {
-                Console.WriteLine("Incorrect Value.");
-                Console.WriteLine("Please enter a Number: ");
+                Display.NotANumberError();
             }
 
             return input;
@@ -144,14 +151,14 @@ private static void UpdateHabit()
                 }
                 else
                 {
-                    Console.WriteLine("Habit not found");
+                    UpdateHabit();
                 }
             }
             else
             {
-                Console.WriteLine("Please enter an ID");
+                Display.NotANumberError();
+                UpdateHabit();
             }
         }
-        
     }
 }

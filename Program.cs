@@ -5,6 +5,4 @@ Display _ = new();
 UI ui = new();
 AppDb.CreateDB();
 
-Display.Menu();
-
 ui.GetMenuInput();

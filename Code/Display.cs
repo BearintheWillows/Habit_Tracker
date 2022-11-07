@@ -22,7 +22,12 @@ namespace Habit_Tracker.Code
         public static void NotANumberError()
         {
             Console.WriteLine("Invalid Input");
-            Console.WriteLine("Enter a Number: ");
+            Console.WriteLine("Enter a Number. ");
+        }
+
+        public static void IdNotFoundError()
+        {
+            Console.WriteLine("ID does not exist. Try again.");
         }
 
       
